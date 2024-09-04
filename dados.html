@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Clientes e Agendamentos - PetShop</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/styles.css" rel="stylesheet" />
+</head>
+<body>
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="index.html">PET SHOP</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="cadastro.html">Cadastro</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Serviços</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="servicos.html">Banho e Tosa</a></li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li><a class="dropdown-item" href="agendamento.html">Agendamento</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Produtos</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="racaoseca.html">Ração Seca</a></li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li><a class="dropdown-item" href="racaoumida.html">Ração Úmida</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="dados.html">Dados</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Header-->
+    <header class="bg-dark py-5">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-white">
+                <h1 class="display-4 fw-bolder">PET SHOP</h1>
+                <p class="lead fw-normal text-white-50 mb-0">Aqui você pode ver os clientes, pets e agendamentos.</p>
+            </div>
+        </div>
+    </header>
+    <!-- Section-->
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 mt-5">
+            <div class="text-center mb-4">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="clientes-tab" data-bs-toggle="tab" href="#clientes" role="tab" aria-controls="clientes" aria-selected="true">Clientes e Pets</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="agendamentos-tab" data-bs-toggle="tab" href="#agendamentos" role="tab" aria-controls="agendamentos" aria-selected="false">Agendamentos</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content" id="myTabContent">
+                <!-- Aba Clientes e Pets -->
+                <div class="tab-pane fade show active" id="clientes" role="tabpanel" aria-labelledby="clientes-tab">
+                    <h2 class="text-center mb-4">Clientes e Pets Cadastrados</h2>
+                    <div id="clientesPetsContainer">
+                        <!-- Os dados serão preenchidos pelo script -->
+                    </div>
+                    <!-- Botão para limpar a base -->
+                    <div class="text-center mt-4">
+                        <button id="clearData" class="btn btn-danger">Limpar Dados</button>
+                    </div>
+                </div>
+                <!-- Aba Agendamentos -->
+                <div class="tab-pane fade" id="agendamentos" role="tabpanel" aria-labelledby="agendamentos-tab">
+                    <h2 class="text-center mb-4">Agendamentos</h2>
+                    <div id="agendamentosContainer">
+                        <!-- Os dados serão preenchidos pelo script -->
+                    </div>
+                    <!-- Botão para limpar a base -->
+                    <div class="text-center mt-4">
+                        <button id="clearAg" class="btn btn-danger">Limpar Agendamentos</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer-->
+    <footer class="py-5 bg-dark">
+        <div class="container"><p class="m-0 text-center text-white">&copy; 2024 PetShop. Todos os direitos reservados.</p></div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Atualiza a lista de clientes e pets e agendamentos quando a página é carregada
+            atualizarClientesEPets();
+            atualizarAgendamentos();
+        });
+
+        function atualizarClientesEPets() {
+            const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+            const container = document.getElementById('clientesPetsContainer');
+            container.innerHTML = '';
+
+            if (clientes.length === 0) {
+                container.innerHTML = '<p class="text-center">Nenhum cliente ou pet cadastrado.</p>';
+                return;
+            }
+
+            clientes.forEach(cliente => {
+                let petsList = cliente.pets.map(pet => `<li>${pet.nomePet} (${pet.tipo}, ${pet.raca}, ${pet.porte}, ${pet.temperamento})</li>`).join('');
+                container.innerHTML += `
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">${cliente.nome}, ${cliente.endereco}, ${cliente.telefone} ${cliente.email} </h5>
+                            <p class="card-text"><strong>Pets:</strong></p>
+                            <ul>${petsList}</ul>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function atualizarAgendamentos() {
+            const agendamentos = JSON.parse(localStorage.getItem('agendamentos')) || [];
+            const container = document.getElementById('agendamentosContainer');
+            container.innerHTML = '';
+
+            if (agendamentos.length === 0) {
+                container.innerHTML = '<p class="text-center">Nenhum agendamento realizado.</p>';
+                return;
+            }
+            
+            agendamentos.forEach(agendamento => {
+                container.innerHTML += `
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Agendamento de ${agendamento.servico}</h5>
+                            <p class="card-text"><strong>Cliente:</strong> ${agendamento.clienteNome}</p>
+                            <p class="card-text"><strong>Pet:</strong> ${agendamento.petNome}</p>
+                            <p class="card-text"><strong>Data:</strong> ${agendamento.data}</p>
+                            <p class="card-text"><strong>Hora:</strong> ${agendamento.hora}</p>
+                            <p class="card-text"><strong>Tele-Busca:</strong> ${agendamento.teleBusca ? 'Sim' : 'Não'}</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        document.getElementById('clearData').addEventListener('click', function() {
+            localStorage.removeItem('clientes');
+            localStorage.removeItem('agendamentos');
+            atualizarClientesEPets();
+            atualizarAgendamentos();
+            alert('Dados limpos com sucesso!');
+        });
+
+        document.getElementById('clearAg').addEventListener('click', function() {
+            localStorage.removeItem('agendamentos');
+            atualizarAgendamentos();
+            alert('Agendamentos limpos com sucesso!');
+        });
+    </script>
+</body>
+</html>
